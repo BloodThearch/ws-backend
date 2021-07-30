@@ -1,12 +1,12 @@
 const express = require('express')
 const router = express.Router()
-const RUser = require('../models/reg')
+
 const User = require('../models/user')
 const bcrypt = require('bcrypt')
 
 router.get('/get-users', async (req,res)=>{
     try{
-        const userData =  await RUser.find()
+        const userData =  await User.find()
         res.json(userData)
     }catch(error){
         res.status(500).json({message: error.message})
@@ -22,7 +22,7 @@ router.post('/login', async (req, res)=>{
 
     if(username.length != 0 && password.length != 0){
         
-        const users = await RUser.find();
+        const users = await User.find();
         let currentUser;
         users.forEach((user)=>{
             
@@ -48,7 +48,7 @@ router.post('/login', async (req, res)=>{
 router.post('/reg/user', async (req, res)=>{
 
     const username = req.body.username
-    const users = await RUser.find()
+    const users = await User.find()
     let state = 0
 
     
@@ -62,7 +62,7 @@ router.post('/reg/user', async (req, res)=>{
 
     
     if(state === 0){
-        const user = new RUser({
+        const user = new User({
             username: req.body.username,
             password: req.body.password,
             mobile: req.body.mobile
@@ -78,6 +78,9 @@ router.post('/reg/user', async (req, res)=>{
     }
     
 });
+
+
+
 
 
 
