@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const User = require('../models/user')
-const bcrypt = require('bcrypt')
+
 
 router.get('/get-users', async (req,res)=>{
     try{
@@ -21,29 +21,29 @@ router.post('/login', async (req, res)=>{
     let state = false;
 
     if(username.length != 0 && password.length != 0){
-        
+        // BOTH USERNAME AND PASSWORD ARE PRESENT
         const users = await User.find();
         let currentUser;
         users.forEach((user)=>{
-            
+            // IF USERNAME IS CORRECT
             if(username === user.username){
-                
+                // STORE USER(FROM DATABASE) WHO IS TRYING TO LOG IN
                 currentUser = user;
-                
-                if(bcrypt.compare(currentUser.password,password)){
+                // IF PASSWORD IS CORRECT
+                if(password === currentUser.password){
                     state = true;
                 }
             }
         });
     }
 
-    
+    // IF BOTH USERNAME AND PASSWORD ENTERED WERE CORRECT STATE ---> true
     if(state){
         res.status(203).json({message: `${username} logged in`});
     }else{
         res.status(410).json({message: 'invalid credentials'});
     }
-})
+});
 
 router.post('/reg/user', async (req, res)=>{
 

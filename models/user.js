@@ -1,6 +1,6 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const bcrypt = require('bcrypt')
+
 
 
 const User = mongoose.Schema({
@@ -33,8 +33,6 @@ const User = mongoose.Schema({
 })
 User.pre('save',async function(next){
     try{
-        const hashedPassword = await bcrypt.hash(this.password,10)
-        this.password = hashedPassword
         const key_ran = require('crypto').randomBytes(3).toString('hex')
         this.code = key_ran
         next()
