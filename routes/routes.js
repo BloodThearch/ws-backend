@@ -79,7 +79,23 @@ router.post('/reg/user', async (req, res)=>{
     
 });
 
+router.patch('/updateLocation',async(req,res)=>{
+    const query = {username:req.body.username}
+    const update_doc = {
+        $set:{
+            "longitude" : req.body.longitude,
+            "latitude" : req.body.latitude
 
+        }
+    }
+    try{
+        const result = await User.findOneAndUpdate(query,update_doc,{useFindAndModify : false , new:true})
+        res.status(221).json({message:"cords changed",doc:result})
+    }
+    catch(e){
+        res.status(421).json({message : error.message})
+    }
+})
 
 
 

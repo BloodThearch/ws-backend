@@ -11,7 +11,7 @@ const User = mongoose.Schema({
         type : String,
         required : true
     },
-    laitude:{
+    latitude:{
         type : Number,
         
         default : 0.00
