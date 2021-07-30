@@ -1,10 +1,12 @@
 const express = require('express')
 const router = express.Router()
-const User = require('../models/reg')
+const RUser = require('../models/reg')
+const User = require('../models/user')
+const bcrypt = require('bcrypt')
 
 router.get('/get-users', async (req,res)=>{
     try{
-        const userData =  await User.find()
+        const userData =  await RUser.find()
         res.json(userData)
     }catch(error){
         res.status(500).json({message: error.message})
@@ -13,38 +15,40 @@ router.get('/get-users', async (req,res)=>{
 
 router.post('/login', async (req, res)=>{
 
-    const username = req.body.username
-    const password = req.body.password
+    var username = req.body.username;
+    var password = req.body.password;
 
-    const state = false
+    let state = false;
 
     if(username.length != 0 && password.length != 0){
         
-        const users = await User.find()
-        let currentUser
+        const users = await RUser.find();
+        let currentUser;
         users.forEach((user)=>{
             
             if(username === user.username){
                 
-                currentUser = User
-                if(password === currentUser.password){
-                    state = true
+                currentUser = user;
+                
+                if(bcrypt.compare(currentUser.password,password)){
+                    state = true;
                 }
             }
-        })
+        });
     }
 
-   
+    
     if(state){
-        res.status(203).json({message: `${username} logged in`})
+        res.status(203).json({message: `${username} logged in`});
     }else{
-        res.status(410).json({message: 'invalid credentials'})
+        res.status(410).json({message: 'invalid credentials'});
     }
 })
+
 router.post('/reg/user', async (req, res)=>{
 
     const username = req.body.username
-    const users = await User.find()
+    const users = await RUser.find()
     let state = 0
 
     
@@ -58,7 +62,7 @@ router.post('/reg/user', async (req, res)=>{
 
     
     if(state === 0){
-        const user = new User({
+        const user = new RUser({
             username: req.body.username,
             password: req.body.password,
             mobile: req.body.mobile
