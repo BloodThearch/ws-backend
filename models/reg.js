@@ -18,4 +18,4 @@ const Ruser = mongoose.Schema({
 
 })
 
-const r_user = module.exports = mongoose.model('Register',Ruser)
+module.exports = mongoose.model('Register',Ruser)

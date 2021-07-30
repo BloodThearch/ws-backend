@@ -1,11 +1,78 @@
 const express = require('express')
 const router = express.Router()
-const Users = require('../models/user')
-const R_user = require('../models/reg')
+const User = require('../models/reg')
 
-router.get('/',(req,res)=>{
-    res.send("gay")
-
+router.get('/get-users', async (req,res)=>{
+    try{
+        const userData =  await User.find()
+        res.json(userData)
+    }catch(error){
+        res.status(500).json({message: error.message})
+    }
 })
+
+router.post('/login', async (req, res)=>{
+
+    const username = req.body.username
+    const password = req.body.password
+
+    const state = false
+
+    if(username.length != 0 && password.length != 0){
+        
+        const users = await User.find()
+        let currentUser
+        users.forEach((user)=>{
+            
+            if(username === user.username){
+                
+                currentUser = User
+                if(password === currentUser.password){
+                    state = true
+                }
+            }
+        })
+    }
+
+   
+    if(state){
+        res.status(203).json({message: `${username} logged in`})
+    }else{
+        res.status(410).json({message: 'invalid credentials'})
+    }
+})
+router.post('/reg/user', async (req, res)=>{
+
+    const username = req.body.username
+    const users = await User.find()
+    let state = 0
+
+    
+    for(var ind in users){
+        if(username === users[ind].username){
+            res.status(414).json({message: 'this username already exists'})
+            state = 1
+            break
+        }
+    }
+
+    
+    if(state === 0){
+        const user = new User({
+            username: req.body.username,
+            password: req.body.password,
+            mobile: req.body.mobile
+        })   
+        try{
+            const newUser = await user.save()
+            res.status(201).json({message: 'new user created', user: newUser})
+        }catch(error){
+            res.status(400).json({message: error.message})
+        }
+    }
+    
+});
+
+
 
 module.exports = router

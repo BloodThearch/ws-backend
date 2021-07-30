@@ -1,13 +1,30 @@
-if (process.env.NODE_ENVIRONMENT === "production"){
-    require('dotenv').config()
-}
+require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
 const user_routes = require('./routes/user')
 const cors = require('cors')
 const port = process.env.PORT || 3000
 const app = express()
-app.use(cors())
+var options = {
+    "origin": "*",
+    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "preflightContinue": false,
+    "optionsSuccessStatus": 204
+  }
+  app.use(cors(options));
+
+
+mongoose.connect(
+    process.env.DATABASE_URI,
+    {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    }
+);
+
+const db = mongoose.connection;
+db.on('error', (error)=>{console.log(error)});
+db.once('open', ()=>{console.log('Connected to Database')});
 app.use('/user',user_routes)
 
 app.listen(port,()=>{
