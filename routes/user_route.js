@@ -65,6 +65,8 @@ router.post('/reg/user', async (req, res)=>{
         const user = new RUser({
             username: req.body.username,
             password: req.body.password,
+            mobile: req.body.mobile
+        
             
         })   
         try{

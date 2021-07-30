@@ -11,6 +11,9 @@ const Ruser = mongoose.Schema({
         type : String,
         required : true
     },
+    mobile:{
+        type:Number
+    }
     
     
 
