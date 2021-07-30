@@ -65,10 +65,8 @@ router.post('/reg/user', async (req, res)=>{
         const user = new User({
             username: req.body.username,
             password: req.body.password,
-            mobile: req.body.mobile
-        
-            
-        })   
+            mobile: req.body.mobile,
+    })   
         try{
             const newUser = await user.save()
             res.status(201).json({message: 'new user created', user: newUser})
